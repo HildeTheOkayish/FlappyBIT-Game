@@ -5,17 +5,17 @@ PImage img;
 int orgspeed = 1;
 int speed = orgspeed;
 float score =0;
-int shiftx = 0;//-32;
-
+int shiftx = -64;
+FloatList scores = new FloatList();
 Tiles [][] test = new Tiles[60][4];
-  PImage [] images = new PImage[2];
+  PImage [] images = new PImage[8];
   PImage playerImg; 
    Player player = new Player();
 import java.awt.Frame;
 import java.awt.Color;
 
 void setup() {
-  
+
   //frame.setLocation(
   //                  100,10
   //              );
@@ -27,13 +27,13 @@ void setup() {
   img = loadImage("basic_tile.png");
   playerImg = loadImage("player.png");
   images[0] = loadImage("basic_tile.png");
-  //images[1] = loadImage("basic_tile2.png");
-  //images[2] = loadImage("basic_tile3.png");
-  //images[3] = loadImage("basic_tile4.png");
-  images[1] = loadImage("basic_tile5.png");//7
-  //images[5] = loadImage("basic_tile.png");
-  //images[6] = loadImage("basic_tile.png");
-  //images[4] = loadImage("basic_tile2.png");
+  images[1] = loadImage("basic_tile2.png");
+  images[2] = loadImage("basic_tile3.png");
+  images[3] = loadImage("basic_tile4.png");
+  images[7] = loadImage("basic_tile5.png");//7
+  images[5] = loadImage("basic_tile.png");
+  images[6] = loadImage("basic_tile.png");
+  images[4] = loadImage("basic_tile2.png");
   //  //for (int i = 0; i < images.length ; i++) {
     //  images[i].resize(128, 0);
     //}
@@ -42,6 +42,10 @@ void setup() {
 }
 boolean[][] ghost =  new boolean[2][test[0].length];
 void start(){
+    if(score != 0){
+   scores.append(score);
+  }
+
    for (int i = 0; i < ghost[0].length ; i++) {
       ghost[0][i] = true;
       ghost[1][i] = true;
@@ -49,7 +53,7 @@ void start(){
 
   speed = orgspeed;
   score =0;
-  for (int i = 0; i < images.length-1 ; i++) {
+  for (int i = 0; i < images.length-2 ; i++) {
       images[i] = images[0];
     }
     for (int i = 0; i < test.length ; i++) {
@@ -71,13 +75,19 @@ void draw() {
   score += 0.001 * speed;
   
    background(0,200,0);
-   fill(30,40,150);
-   quad(0,0,0,175,width,height-175,width,0);
-   
+   fill(30,140,250);
+   quad(0,0,0,225,width,height-175,width,0);
+  fill(0, 102, 153);  
 textSize(32);
 text(score, 10, 30); 
-text(speed, 10, 60); 
-fill(0, 102, 153); 
+  for (int i = 0; i < scores.size() ; i++) {
+    fill(0, 102, 153);  
+    textSize(16);
+    text(scores.get(i), width - 130, 16 + 16 * i); 
+  }
+
+//text(speed, 10, 60); 
+
  // while(framePerMillisec * framecount < millis()){
  //    framecount++;
     drawCity();
@@ -107,11 +117,11 @@ void drawCity(){
 
       if(y > -1 && y < test[0].length && x > 25 - (y-15) && x < 27 - (y-15) && player.y == y){
                if(!player.action(x,y)){
-        // start();
-      //  speed = 0;
+         start();
+      // speed = 0;
                }else
                {
-               // speed = orgspeed; 
+                speed = orgspeed; 
                }
         noStroke();
       
@@ -152,7 +162,8 @@ void keyPressed(){
   if (key == CODED) {
       if(keyCode == LEFT) player.keyarr[0] = true;
       if(keyCode == RIGHT) player.keyarr[1] = true;
-       if(keyCode == UP) speed = 0;
+
+       if(keyCode == DOWN) start();
   }
   
 }
