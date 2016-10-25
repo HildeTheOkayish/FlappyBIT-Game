@@ -1,3 +1,5 @@
+  PImage [] upgradeImages = new PImage[8];
+
 class Upgrades{
   String[] types = {
    "drill",
